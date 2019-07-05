@@ -1,16 +1,33 @@
 package com.apipedidos.Api_Pedidos.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.apipedidos.Api_Pedidos.domain.Categoria;
 
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResources {
 	
+	
+	
+	
 	@RequestMapping(method = RequestMethod.GET)
-	public String listar() {
-		return "Rest funcionado";
+	public List<Categoria> listar() {
+		Categoria cat1 = new Categoria(1, "verduras");
+		Categoria cat2 = new Categoria(2, "Glozemias");
+		Categoria cat3 = new Categoria(3, "seriais");
+		
+		List<Categoria> lista = new ArrayList<>();
+		lista.add(cat1);
+		lista.add(cat2);
+		lista.add(cat3);
+		
+		return lista;
 	}
 
 }
