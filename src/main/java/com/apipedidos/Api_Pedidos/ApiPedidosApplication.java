@@ -1,5 +1,7 @@
 package com.apipedidos.Api_Pedidos;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,20 @@ import com.apipedidos.Api_Pedidos.domain.Cidade;
 import com.apipedidos.Api_Pedidos.domain.Cliente;
 import com.apipedidos.Api_Pedidos.domain.Endereco;
 import com.apipedidos.Api_Pedidos.domain.Estado;
+import com.apipedidos.Api_Pedidos.domain.Pagamento;
+import com.apipedidos.Api_Pedidos.domain.PagamentoBoleto;
+import com.apipedidos.Api_Pedidos.domain.PagamentoCartao;
+import com.apipedidos.Api_Pedidos.domain.Pedido;
 import com.apipedidos.Api_Pedidos.domain.Produto;
+import com.apipedidos.Api_Pedidos.domain.enums.EstadoPagamento;
 import com.apipedidos.Api_Pedidos.domain.enums.TipoCliente;
 import com.apipedidos.Api_Pedidos.repository.CategoriaRepository;
 import com.apipedidos.Api_Pedidos.repository.CidadeRepository;
 import com.apipedidos.Api_Pedidos.repository.ClienteRepository;
 import com.apipedidos.Api_Pedidos.repository.EnderecoRepository;
 import com.apipedidos.Api_Pedidos.repository.EstadoRepository;
+import com.apipedidos.Api_Pedidos.repository.PagamentoRepository;
+import com.apipedidos.Api_Pedidos.repository.PedidoRepository;
 import com.apipedidos.Api_Pedidos.repository.ProdutoRepository;
 
 @SpringBootApplication
@@ -36,7 +45,10 @@ public class ApiPedidosApplication implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
 	
 	
 	public static void main(String[] args) {
@@ -83,12 +95,27 @@ public class ApiPedidosApplication implements CommandLineRunner {
 		
 		cli1.getEnderecos().addAll(Arrays.asList(end1));
 		
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Pedido ped1 = new Pedido(null, df.parse("05/07/2019 08:00"), cli1, end1);
+		Pedido ped2 = new Pedido(null, df.parse("01/07/2019 10:00"), cli1, end1);
+		
+		Pagamento pgto1 = new PagamentoCartao(null, EstadoPagamento.PENDENTE, ped1, 6);
+		ped1.setPagamento(pgto1);
+		
+		Pagamento pgto2 = new PagamentoBoleto(null, EstadoPagamento.QUITADO, ped2, df.parse("02/07/2019 09:30"), df.parse("02/07/2019 18:12"));
+		ped2.setPagamento(pgto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
 		produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
 		estadoRepository.saveAll(Arrays.asList(est1,est2,est3));
 		cidadeRepository.saveAll(Arrays.asList(cid1,cid2,cid3,cid4,cid5,cid6));
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(end1));
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pgto1, pgto2));
 	}
 	
 	
