@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.apipedidos.Api_Pedidos.domain.Categoria;
 import com.apipedidos.Api_Pedidos.domain.Cidade;
+import com.apipedidos.Api_Pedidos.domain.Cliente;
+import com.apipedidos.Api_Pedidos.domain.Endereco;
 import com.apipedidos.Api_Pedidos.domain.Estado;
 import com.apipedidos.Api_Pedidos.domain.Produto;
+import com.apipedidos.Api_Pedidos.domain.enums.TipoCliente;
 import com.apipedidos.Api_Pedidos.repository.CategoriaRepository;
 import com.apipedidos.Api_Pedidos.repository.CidadeRepository;
+import com.apipedidos.Api_Pedidos.repository.ClienteRepository;
+import com.apipedidos.Api_Pedidos.repository.EnderecoRepository;
 import com.apipedidos.Api_Pedidos.repository.EstadoRepository;
 import com.apipedidos.Api_Pedidos.repository.ProdutoRepository;
 
@@ -20,13 +25,18 @@ import com.apipedidos.Api_Pedidos.repository.ProdutoRepository;
 public class ApiPedidosApplication implements CommandLineRunner {
 	
 	@Autowired
-	CategoriaRepository categoriaRepository;
+	private CategoriaRepository categoriaRepository;
 	@Autowired
-	ProdutoRepository produtoRepository;
+	private ProdutoRepository produtoRepository;
 	@Autowired
-	EstadoRepository estadoRepository;
+	private EstadoRepository estadoRepository;
 	@Autowired
-	CidadeRepository cidadeRepository;
+	private CidadeRepository cidadeRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
 	
 	
 	public static void main(String[] args) {
@@ -65,10 +75,20 @@ public class ApiPedidosApplication implements CommandLineRunner {
 		est2.getCidades().addAll(Arrays.asList(cid2));
 		est3.getCidades().addAll(Arrays.asList(cid3,cid4,cid5,cid6));
 		
+		Cliente cli1 = new Cliente(null, "Lucas Marques", "lucas@gmail","03116952132", TipoCliente.PESSOAFISICA);
+		
+		cli1.getTelefones().addAll(Arrays.asList("12345", "123456"));
+		
+		Endereco end1 = new Endereco(null, "rua 1", "12b", "casa 2", "Floresta", "78123000", cli1, cid3);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(end1));
+		
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
 		produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
 		estadoRepository.saveAll(Arrays.asList(est1,est2,est3));
 		cidadeRepository.saveAll(Arrays.asList(cid1,cid2,cid3,cid4,cid5,cid6));
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(end1));
 	}
 	
 	
